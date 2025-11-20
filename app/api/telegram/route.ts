@@ -6,9 +6,7 @@ type Body = {
   email: string;
   phone: string;
   service: string;
-  budget: string;
   consent: boolean;
-  company?: string;
   website?: string;
   message?: string;
   utm_source?: string;
@@ -32,10 +30,10 @@ export async function POST(req: Request) {
     verifyEnvironmentVars();
     
     const body = (await req.json()) as Body;
-    const { name, email, phone, service, budget, consent } = body;
+    const { name, email, phone, service, consent } = body;
     
     // Validate required fields
-    if (!name || !email || !phone || !service || !budget || !consent) {
+    if (!name || !email || !phone || !service || !consent) {
       return NextResponse.json({ error: 'Необходимо заполнить все обязательные поля' }, { status: 400 });
     }
 
@@ -54,8 +52,6 @@ export async function POST(req: Request) {
       `• Email: ${body.email}`,
       `• Телефон: ${body.phone}`,
       `• Услуга: ${body.service}`,
-      `• Бюджет: ${body.budget}`,
-      body.company ? `• Компания: ${body.company}` : undefined,
       body.website ? `• Сайт: ${body.website}` : undefined,
       body.message ? `\n💬 Сообщение:\n${body.message}` : undefined,
       `\n📊 Дополнительная информация:`,

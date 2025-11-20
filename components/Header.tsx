@@ -96,7 +96,7 @@ export function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-3">
-          <Link href="/contact" className="rounded-full bg-softBlueGray/20 px-4 py-2 hover:animate-ripple">
+          <Link href="/contact" className="hidden sm:inline-block rounded-full bg-softBlueGray/20 px-4 py-2 text-sm font-medium hover:animate-ripple whitespace-nowrap">
             Бесплатная консультация
           </Link>
           <button className="md:hidden" aria-label="Открыть меню" onClick={() => setOpen((v) => !v)}>
@@ -143,7 +143,7 @@ export function Header() {
                   )}
                 </div>
               ))}
-              <Link href="/contact" onClick={closeMobile} className="mt-2 block rounded-full bg-softBlueGray/20 px-4 py-2 text-center">
+              <Link href="/contact" onClick={closeMobile} className="mt-2 block rounded-full bg-softBlueGray/20 px-4 py-3 text-center font-medium text-sm">
                 Бесплатная консультация
               </Link>
             </div>

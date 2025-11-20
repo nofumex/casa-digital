@@ -61,9 +61,9 @@ export default function HomePage() {
           ) : (
             <p className="mt-2 max-w-prose text-slate-600">Красивые, быстрые и понятные сайты + реклама и автоматизация для высокой окупаемости</p>
           )}
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/contact" className="rounded-full bg-softBlueGray/30 px-5 py-3 hover:bg-softBlueGray/40">{hero.ctaPrimary || 'Получить бесплатную консультацию'}</Link>
-            <Link href="#portfolio" className="rounded-full border border-softBlueGray/50 px-5 py-3 hover:bg-white">{hero.ctaSecondary || 'Посмотреть работы'}</Link>
+          <div className="mt-6 flex flex-col sm:flex-row gap-3">
+            <Link href="/contact" className="w-full sm:w-auto text-center rounded-full bg-softBlueGray/30 px-5 py-3 font-medium hover:bg-softBlueGray/40 transition-colors">{hero.ctaPrimary || 'Получить бесплатную консультацию'}</Link>
+            <Link href="#portfolio" className="w-full sm:w-auto text-center rounded-full border border-softBlueGray/50 px-5 py-3 font-medium hover:bg-white transition-colors">{hero.ctaSecondary || 'Посмотреть работы'}</Link>
           </div>
           {/* Statistics */}
           <div className="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
@@ -143,7 +143,7 @@ export default function HomePage() {
         </div>
         <div className="mt-8 text-center">
           <p className="text-slate-600">Не нашли нужную услугу? Мы создадим индивидуальное решение для вас.</p>
-          <Link href="/contact" className="mt-4 inline-block rounded-full border border-softBlueGray/50 px-5 py-3 hover:bg-white">Обсудить проект</Link>
+          <Link href="/contact" className="mt-4 inline-block w-full sm:w-auto text-center rounded-full border border-softBlueGray/50 px-5 py-3 font-medium hover:bg-white transition-colors">Обсудить проект</Link>
         </div>
       </section>
 
@@ -174,9 +174,9 @@ export default function HomePage() {
           <div className="text-center">
             <h3 className="text-xl font-semibold">Готовы начать проект?</h3>
             <p className="mt-2 text-slate-600">Получите бесплатную консультацию и узнайте, как мы можем помочь вашему бизнесу расти</p>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Link href="/contact" className="rounded-full bg-softBlueGray/30 px-5 py-3 hover:bg-softBlueGray/40">Получить консультацию</Link>
-              <a href="https://t.me/CasaAgency" target="_blank" rel="noreferrer" className="rounded-full border border-softBlueGray/50 px-5 py-3 hover:bg-white">Написать в Telegram</a>
+            <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+              <Link href="/contact" className="w-full sm:w-auto text-center rounded-full bg-softBlueGray/30 px-5 py-3 font-medium hover:bg-softBlueGray/40 transition-colors">Получить консультацию</Link>
+              <a href="https://t.me/CasaAgency" target="_blank" rel="noreferrer" className="w-full sm:w-auto text-center rounded-full border border-softBlueGray/50 px-5 py-3 font-medium hover:bg-white transition-colors">Написать в Telegram</a>
             </div>
           </div>
         </div>
@@ -191,9 +191,9 @@ export default function HomePage() {
         <PortfolioClientGrid />
         <div className="mt-8 text-center">
           <p className="text-slate-600">Хотите такие же результаты?</p>
-          <div className="mt-4 flex flex-wrap justify-center gap-3">
-            <Link href="/contact" className="rounded-full bg-softBlueGray/30 px-5 py-3 hover:bg-softBlueGray/40">Обсудить проект</Link>
-            <Link href="/portfolio" className="rounded-full border border-softBlueGray/50 px-5 py-3 hover:bg-white">Все кейсы</Link>
+          <div className="mt-4 flex flex-col sm:flex-row justify-center gap-3">
+            <Link href="/contact" className="w-full sm:w-auto text-center rounded-full bg-softBlueGray/30 px-5 py-3 font-medium hover:bg-softBlueGray/40 transition-colors">Обсудить проект</Link>
+            <Link href="/portfolio" className="w-full sm:w-auto text-center rounded-full border border-softBlueGray/50 px-5 py-3 font-medium hover:bg-white transition-colors">Все кейсы</Link>
           </div>
         </div>
       </section>
@@ -245,9 +245,9 @@ export default function HomePage() {
           </div>
           <div className="mt-8 text-center">
             <p className="text-slate-600">Станьте нашей следующей историей успеха</p>
-            <div className="mt-4 flex flex-wrap justify-center gap-3">
-              <Link href="/contact" className="rounded-full bg-softBlueGray/30 px-5 py-3 hover:bg-softBlueGray/40">Получить результаты</Link>
-              <a href="https://t.me/CasaAgency" target="_blank" rel="noreferrer" className="rounded-full border border-softBlueGray/50 px-5 py-3 hover:bg-white">Задать вопрос</a>
+            <div className="mt-4 flex flex-col sm:flex-row justify-center gap-3">
+              <Link href="/contact" className="w-full sm:w-auto text-center rounded-full bg-softBlueGray/30 px-5 py-3 font-medium hover:bg-softBlueGray/40 transition-colors">Получить результаты</Link>
+              <a href="https://t.me/CasaAgency" target="_blank" rel="noreferrer" className="w-full sm:w-auto text-center rounded-full border border-softBlueGray/50 px-5 py-3 font-medium hover:bg-white transition-colors">Задать вопрос</a>
             </div>
           </div>
         </section>
@@ -258,9 +258,9 @@ export default function HomePage() {
         <div className="text-center">
           <h2 className="text-3xl font-semibold">Готовы увеличить прибыль?</h2>
           <p className="mt-2 text-lg text-slate-600">Получите бесплатную консультацию и узнайте, как мы можем помочь вашему бизнесу расти</p>
-          <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Link href="/contact" className="rounded-full bg-paleTeal px-6 py-3 text-slate-900 font-medium">Получить консультацию</Link>
-            <a href="https://t.me/CasaAgency" target="_blank" rel="noreferrer" className="rounded-full border border-softBlueGray/50 px-6 py-3 hover:bg-white font-medium">Написать в Telegram</a>
+          <div className="mt-6 flex flex-col sm:flex-row justify-center gap-3">
+            <Link href="/contact" className="w-full sm:w-auto text-center rounded-full bg-paleTeal px-6 py-3 text-slate-900 font-medium hover:bg-paleTeal/90 transition-colors">Получить консультацию</Link>
+            <a href="https://t.me/CasaAgency" target="_blank" rel="noreferrer" className="w-full sm:w-auto text-center rounded-full border border-softBlueGray/50 px-6 py-3 hover:bg-white font-medium transition-colors">Написать в Telegram</a>
           </div>
           <div className="mt-8 grid gap-4 md:grid-cols-3">
             <div className="text-center">

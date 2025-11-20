@@ -21,10 +21,11 @@ type CaseItem = {
   solution?: string;
   results?: { title?: string; value?: string }[];
   features?: string[];
-  gallery?: string[];
+  gallery?: Array<{ url: string; description?: string }>;
   technologies?: string[];
   review?: { text: string; author?: string } | null;
   coverImage?: string;
+  domain?: string;
 };
 
 type TabKey =
@@ -194,6 +195,179 @@ function BlogSection() {
   );
 }
 
+function CaseItemForm({ field, index, form, remove, move, fieldsLength }: { field: any; index: number; form: any; remove: (index: number) => void; move: (from: number, to: number) => void; fieldsLength: number }) {
+  const [isExpanded, setIsExpanded] = useState(true);
+  
+  return (
+    <div className="rounded-xl bg-white p-4 ring-1 ring-black/5 space-y-3">
+      {/* Header with expand/collapse */}
+      <div className="flex items-center justify-between border-b pb-2">
+        <button
+          type="button"
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="flex-1 text-left font-medium text-sm hover:text-paleTeal"
+        >
+          {form.watch(`items.${index}.title`) || `Кейс #${index + 1}`}
+        </button>
+        <div className="flex gap-2">
+          <button className="text-xs px-2 py-1 rounded border hover:bg-slate-50" onClick={()=> index>0 && move(index, index-1)}>↑</button>
+          <button className="text-xs px-2 py-1 rounded border hover:bg-slate-50" onClick={()=> index<fieldsLength-1 && move(index, index+1)}>↓</button>
+          <button className="text-xs text-red-600 px-2 py-1 rounded border hover:bg-red-50" onClick={() => { if (confirm("Удалить кейс?")) remove(index); }}>Удалить</button>
+        </div>
+      </div>
+
+      {isExpanded && (
+        <div className="space-y-4">
+          {/* Basic Info */}
+          <div className="rounded-lg bg-slate-50 p-3">
+            <h4 className="text-xs font-semibold text-slate-600 mb-2">Основная информация</h4>
+            <div className="grid gap-3 md:grid-cols-2">
+              <label className="text-sm">Slug<input className="mt-1 w-full rounded border px-3 py-2 text-sm" {...form.register(`items.${index}.slug` as const)} placeholder="my-case-slug" /></label>
+              <label className="text-sm">Title<input className="mt-1 w-full rounded border px-3 py-2 text-sm" {...form.register(`items.${index}.title` as const)} placeholder="Название проекта" /></label>
+              <label className="text-sm">Category<input className="mt-1 w-full rounded border px-3 py-2 text-sm" {...form.register(`items.${index}.category` as const)} placeholder="Веб-разработка" /></label>
+              <label className="text-sm">Client<input className="mt-1 w-full rounded border px-3 py-2 text-sm" {...form.register(`items.${index}.client` as const)} placeholder="Название клиента" /></label>
+              <label className="text-sm">Year<input className="mt-1 w-full rounded border px-3 py-2 text-sm" {...form.register(`items.${index}.year` as const)} placeholder="2024" /></label>
+              <label className="text-sm">Timeline<input className="mt-1 w-full rounded border px-3 py-2 text-sm" {...form.register(`items.${index}.timeline` as const)} placeholder="2 месяца" /></label>
+              <label className="col-span-2 text-sm">Domain (опционально)<input className="mt-1 w-full rounded border px-3 py-2 text-sm" {...form.register(`items.${index}.domain` as const)} placeholder="https://example.com" /></label>
+            </div>
+          </div>
+
+          {/* Descriptions */}
+          <div className="rounded-lg bg-slate-50 p-3">
+            <h4 className="text-xs font-semibold text-slate-600 mb-2">Описания</h4>
+            <div className="grid gap-3">
+              <label className="text-sm">Short description (для карточки)<textarea className="mt-1 w-full rounded border px-3 py-2 text-sm" rows={2} {...form.register(`items.${index}.shortDescription` as const)} placeholder="Краткое описание проекта" /></label>
+              <label className="text-sm">Full description (для страницы кейса)<textarea className="mt-1 w-full rounded border px-3 py-2 text-sm" rows={4} {...form.register(`items.${index}.fullDescription` as const)} placeholder="Полное описание проекта" /></label>
+            </div>
+          </div>
+
+          {/* Task & Solution */}
+          <div className="rounded-lg bg-slate-50 p-3">
+            <h4 className="text-xs font-semibold text-slate-600 mb-2">Задача и решение</h4>
+            <div className="grid gap-3">
+              <label className="text-sm">Task<textarea className="mt-1 w-full rounded border px-3 py-2 text-sm" rows={3} {...form.register(`items.${index}.task` as const)} placeholder="Описание задачи клиента" /></label>
+              <label className="text-sm">Solution<textarea className="mt-1 w-full rounded border px-3 py-2 text-sm" rows={3} {...form.register(`items.${index}.solution` as const)} placeholder="Как мы решили задачу" /></label>
+            </div>
+          </div>
+
+          {/* Media */}
+          <div className="rounded-lg bg-slate-50 p-3">
+            <h4 className="text-xs font-semibold text-slate-600 mb-2">Медиа</h4>
+            <div className="grid gap-3">
+              <label className="text-sm">Cover image URL<input className="mt-1 w-full rounded border px-3 py-2 text-sm" {...form.register(`items.${index}.coverImage` as const)} placeholder="/images/case-cover.jpg" /></label>
+              
+              {/* Gallery with descriptions */}
+              <div>
+                <div className="text-sm font-medium text-slate-700 mb-2">Галерея проекта</div>
+                <div className="space-y-2">
+                  {(form.watch(`items.${index}.gallery` as const) || []).map((item: { url: string; description?: string }, imgIndex: number) => (
+                    <div key={imgIndex} className="flex gap-2 items-start p-3 bg-white rounded border border-slate-200">
+                      <div className="flex-1 grid gap-2">
+                        <div>
+                          <label className="text-xs text-slate-500 mb-1 block">URL изображения</label>
+                          <input
+                            type="text"
+                            placeholder="/ХироМР.png"
+                            value={item.url || ''}
+                            onChange={(e) => {
+                              const gallery = form.getValues(`items.${index}.gallery` as const) || [];
+                              gallery[imgIndex] = { ...gallery[imgIndex], url: e.target.value };
+                              form.setValue(`items.${index}.gallery` as const, [...gallery], { shouldDirty: true });
+                            }}
+                            className="w-full rounded border px-2 py-1.5 text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-xs text-slate-500 mb-1 block">Подпись</label>
+                          <input
+                            type="text"
+                            placeholder="Главная, Услуги, Услуги 2..."
+                            value={item.description || ''}
+                            onChange={(e) => {
+                              const gallery = form.getValues(`items.${index}.gallery` as const) || [];
+                              gallery[imgIndex] = { ...gallery[imgIndex], description: e.target.value };
+                              form.setValue(`items.${index}.gallery` as const, [...gallery], { shouldDirty: true });
+                            }}
+                            className="w-full rounded border px-2 py-1.5 text-sm"
+                          />
+                        </div>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const gallery = form.getValues(`items.${index}.gallery` as const) || [];
+                          gallery.splice(imgIndex, 1);
+                          form.setValue(`items.${index}.gallery` as const, [...gallery], { shouldDirty: true });
+                        }}
+                        className="px-3 py-1 text-xs text-red-600 hover:bg-red-50 rounded border border-red-200 whitespace-nowrap"
+                      >
+                        Удалить
+                      </button>
+                    </div>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const gallery = form.getValues(`items.${index}.gallery` as const) || [];
+                      form.setValue(`items.${index}.gallery` as const, [...gallery, { url: '', description: '' }], { shouldDirty: true });
+                    }}
+                    className="w-full px-3 py-2 text-sm border border-dashed border-slate-300 rounded hover:bg-white transition-colors text-slate-600"
+                  >
+                    + Добавить картинку
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Lists */}
+          <div className="rounded-lg bg-slate-50 p-3">
+            <h4 className="text-xs font-semibold text-slate-600 mb-2">Списки</h4>
+            <div className="grid gap-3 md:grid-cols-2">
+              <label className="text-sm">Technologies (через запятую)<input className="mt-1 w-full rounded border px-3 py-2 text-sm" defaultValue={(form.getValues(`items.${index}.technologies` as const) || []).join(', ')} onChange={(e) => {
+                const arr = e.target.value.split(',').map(s=>s.trim()).filter(Boolean);
+                form.setValue(`items.${index}.technologies` as const, arr, { shouldDirty: true });
+              }} placeholder="React, Next.js, TypeScript" /></label>
+              <label className="text-sm">Features (через запятую)<input className="mt-1 w-full rounded border px-3 py-2 text-sm" defaultValue={(form.getValues(`items.${index}.features` as const) || []).join(', ')} onChange={(e) => {
+                const arr = e.target.value.split(',').map(s=>s.trim()).filter(Boolean);
+                form.setValue(`items.${index}.features` as const, arr, { shouldDirty: true });
+              }} placeholder="Адаптивный дизайн, SEO" /></label>
+            </div>
+          </div>
+
+          {/* Results */}
+          <div className="rounded-lg bg-slate-50 p-3">
+            <h4 className="text-xs font-semibold text-slate-600 mb-2">Результаты (JSON массив объектов title/value)</h4>
+            <textarea className="w-full rounded border px-3 py-2 text-sm font-mono" rows={4} defaultValue={JSON.stringify(form.getValues(`items.${index}.results` as const) || [], null, 2)} onChange={(e)=>{
+              try {
+                const val = JSON.parse(e.target.value || "[]");
+                form.setValue(`items.${index}.results` as const, val, { shouldDirty: true });
+              } catch {}
+            }} placeholder='[{"title": "Конверсия", "value": "+150%"}]' />
+          </div>
+
+          {/* Review */}
+          <div className="rounded-lg bg-slate-50 p-3">
+            <h4 className="text-xs font-semibold text-slate-600 mb-2">Отзыв клиента</h4>
+            <div className="grid gap-3">
+              <label className="text-sm">Review text<textarea className="mt-1 w-full rounded border px-3 py-2 text-sm" rows={3} defaultValue={form.getValues(`items.${index}.review` as const)?.text || ""} onChange={(e)=>{
+                const text = e.target.value;
+                const curr = form.getValues(`items.${index}.review` as const) || { text: "" } as any;
+                form.setValue(`items.${index}.review` as const, { ...curr, text }, { shouldDirty: true });
+              }} placeholder="Текст отзыва" /></label>
+              <label className="text-sm">Review author<input className="mt-1 w-full rounded border px-3 py-2 text-sm" defaultValue={form.getValues(`items.${index}.review` as const)?.author || ""} onChange={(e)=>{
+                const author = e.target.value;
+                const curr = form.getValues(`items.${index}.review` as const) || { text: "" } as any;
+                form.setValue(`items.${index}.review` as const, { ...curr, author }, { shouldDirty: true });
+              }} placeholder="Имя автора отзыва" /></label>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function PortfolioSection() {
   const headers = useAdminHeaders();
   const form = useForm<{ items: CaseItem[] }>({ defaultValues: { items: [] } });
@@ -212,9 +386,19 @@ function PortfolioSection() {
           const results: any[] = Array.isArray(c.results)
             ? c.results
             : [];
-          const gallery: string[] = Array.isArray(c.images)
-            ? c.images.map((img: any) => (typeof img === 'string' ? img : img?.url)).filter(Boolean)
+          // Normalize gallery: convert old format (string[]) to new format ({ url, description }[])
+          const galleryRaw = Array.isArray(c.images)
+            ? c.images
             : (Array.isArray(c.gallery) ? c.gallery : []);
+          const gallery: Array<{ url: string; description?: string }> = galleryRaw.map((item: any) => {
+            if (typeof item === 'string') {
+              return { url: item, description: '' };
+            }
+            if (item && typeof item === 'object' && item.url) {
+              return { url: item.url, description: item.description || '' };
+            }
+            return null;
+          }).filter(Boolean) as Array<{ url: string; description?: string }>;
           const review = c.testimonial ? { text: c.testimonial.text, author: c.testimonial.author } : (c.review || null);
           return {
             slug: c.slug || c.id || "",
@@ -233,6 +417,7 @@ function PortfolioSection() {
             technologies: c.technologies || [],
             review,
             coverImage: c.coverImage || (gallery?.[0] || ""),
+            domain: c.domain || "",
           } as CaseItem;
         });
         form.reset({ items: data });
@@ -257,67 +442,22 @@ function PortfolioSection() {
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold">Портфолио</h2>
         <div className="flex gap-2">
-          <button onClick={() => append({ slug: "", title: "", shortDescription: "", fullDescription: "", category: "", features: [], gallery: [], technologies: [], results: [], review: null })} className="rounded-md border px-3 py-1 text-sm hover:bg-white">Добавить</button>
+          <button onClick={() => append({ slug: "", title: "", shortDescription: "", fullDescription: "", category: "", features: [], gallery: [], technologies: [], results: [], review: null, domain: "" })} className="rounded-md border px-3 py-1 text-sm hover:bg-white">Добавить кейс</button>
           <button onClick={onSave} className="rounded-md bg-paleTeal px-3 py-1 text-sm text-slate-900">Сохранить</button>
         </div>
       </div>
 
       <div className="space-y-4">
         {fields.map((field, index) => (
-          <div key={field.id} className="rounded-xl bg-white p-4 ring-1 ring-black/5 space-y-3">
-            <div className="grid gap-3 md:grid-cols-2">
-              <label className="text-sm">Slug<input className="mt-1 w-full rounded border px-3 py-2" {...form.register(`items.${index}.slug` as const)} /></label>
-              <label className="text-sm">Title<input className="mt-1 w-full rounded border px-3 py-2" {...form.register(`items.${index}.title` as const)} /></label>
-              <label className="col-span-2 text-sm">Short description<textarea className="mt-1 w-full rounded border px-3 py-2" rows={3} {...form.register(`items.${index}.shortDescription` as const)} /></label>
-              <label className="col-span-2 text-sm">Full description<textarea className="mt-1 w-full rounded border px-3 py-2" rows={6} {...form.register(`items.${index}.fullDescription` as const)} /></label>
-              <label className="text-sm">Category<input className="mt-1 w-full rounded border px-3 py-2" {...form.register(`items.${index}.category` as const)} /></label>
-              <label className="text-sm">Year<input className="mt-1 w-full rounded border px-3 py-2" {...form.register(`items.${index}.year` as const)} /></label>
-              <label className="text-sm">Timeline<input className="mt-1 w-full rounded border px-3 py-2" {...form.register(`items.${index}.timeline` as const)} /></label>
-              <label className="text-sm">Client<input className="mt-1 w-full rounded border px-3 py-2" {...form.register(`items.${index}.client` as const)} /></label>
-              <label className="text-sm">Cover image<input className="mt-1 w-full rounded border px-3 py-2" {...form.register(`items.${index}.coverImage` as const)} /></label>
-              <label className="col-span-2 text-sm">Task<textarea className="mt-1 w-full rounded border px-3 py-2" rows={3} {...form.register(`items.${index}.task` as const)} /></label>
-              <label className="col-span-2 text-sm">Solution<textarea className="mt-1 w-full rounded border px-3 py-2" rows={3} {...form.register(`items.${index}.solution` as const)} /></label>
-              <label className="text-sm">Technologies (через запятую)<input className="mt-1 w-full rounded border px-3 py-2" defaultValue={(form.getValues(`items.${index}.technologies` as const) || []).join(', ')} onChange={(e) => {
-                const arr = e.target.value.split(',').map(s=>s.trim()).filter(Boolean);
-                form.setValue(`items.${index}.technologies` as const, arr, { shouldDirty: true });
-              }} /></label>
-              <label className="text-sm">Features (через запятую)<input className="mt-1 w-full rounded border px-3 py-2" defaultValue={(form.getValues(`items.${index}.features` as const) || []).join(', ')} onChange={(e) => {
-                const arr = e.target.value.split(',').map(s=>s.trim()).filter(Boolean);
-                form.setValue(`items.${index}.features` as const, arr, { shouldDirty: true });
-              }} /></label>
-              <label className="text-sm">Gallery URLs (через запятую)<input className="mt-1 w-full rounded border px-3 py-2" defaultValue={(form.getValues(`items.${index}.gallery` as const) || []).join(', ')} onChange={(e) => {
-                const arr = e.target.value.split(',').map(s=>s.trim()).filter(Boolean);
-                form.setValue(`items.${index}.gallery` as const, arr, { shouldDirty: true });
-              }} /></label>
-            </div>
-            <div className="grid gap-3">
-              <label className="text-sm">Results (JSON массив объектов title/value)<textarea className="mt-1 w-full rounded border px-3 py-2" rows={3} defaultValue={JSON.stringify(form.getValues(`items.${index}.results` as const) || [], null, 2)} onChange={(e)=>{
-                try {
-                  const val = JSON.parse(e.target.value || "[]");
-                  form.setValue(`items.${index}.results` as const, val, { shouldDirty: true });
-                } catch {}
-              }} /></label>
-              <label className="text-sm">Review text<textarea className="mt-1 w-full rounded border px-3 py-2" rows={3} onChange={(e)=>{
-                const text = e.target.value;
-                const curr = form.getValues(`items.${index}.review` as const) || { text: "" } as any;
-                form.setValue(`items.${index}.review` as const, { ...curr, text }, { shouldDirty: true });
-              }} /></label>
-              <label className="text-sm">Review author<input className="mt-1 w-full rounded border px-3 py-2" onChange={(e)=>{
-                const author = e.target.value;
-                const curr = form.getValues(`items.${index}.review` as const) || { text: "" } as any;
-                form.setValue(`items.${index}.review` as const, { ...curr, author }, { shouldDirty: true });
-              }} /></label>
-            </div>
-            <div className="flex justify-between">
-              <div className="flex gap-2">
-                <button className="text-xs" onClick={()=> index>0 && move(index, index-1)}>↑</button>
-                <button className="text-xs" onClick={()=> index<fields.length-1 && move(index, index+1)}>↓</button>
-              </div>
-              <div>
-                <button className="text-sm text-red-600" onClick={() => { if (confirm("Удалить кейс?")) remove(index); }}>Удалить</button>
-              </div>
-            </div>
-          </div>
+          <CaseItemForm
+            key={field.id}
+            field={field}
+            index={index}
+            form={form}
+            remove={remove}
+            move={move}
+            fieldsLength={fields.length}
+          />
         ))}
       </div>
       {loading && <div className="text-sm text-slate-500">Загрузка…</div>}

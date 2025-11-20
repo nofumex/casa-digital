@@ -34,12 +34,18 @@ export default function CaseStudyPage({ params }: { params: { slug: string } }) 
       author: (rawCase as any).review.author,
       position: (rawCase as any).review.position || ''
     } : undefined,
+    domain: (rawCase as any).domain || undefined,
     // Transform gallery array into images array with url/alt structure
-    images: ((rawCase as any).gallery || []).map((imgPath: string, idx: number) => ({
-      url: imgPath,
-      alt: `${rawCase.title} - изображение ${idx + 1}`,
-      description: idx === 0 ? 'Главная страница' : idx === 1 ? 'Каталог' : idx === 2 ? 'Корзина' : idx === 3 ? 'Админка' : undefined
-    }))
+    images: ((rawCase as any).gallery || []).map((item: any, idx: number) => {
+      // Support both old format (string[]) and new format ({ url, description }[])
+      const url = typeof item === 'string' ? item : (item?.url || '');
+      const description = typeof item === 'object' && item?.description ? item.description : undefined;
+      return {
+        url,
+        alt: `${rawCase.title} - ${description || `изображение ${idx + 1}`}`,
+        description: description || (idx === 0 ? 'Главная страница' : idx === 1 ? 'Каталог' : idx === 2 ? 'Корзина' : idx === 3 ? 'Админка' : undefined)
+      };
+    })
   };
 
   return <CaseStudyClient caseStudy={caseStudy} />;

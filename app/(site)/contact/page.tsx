@@ -6,11 +6,9 @@ import { useState } from 'react';
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
-    company: '',
     email: '',
     phone: '',
     service: '',
-    budget: '',
     message: '',
     consent: false
   });
@@ -41,11 +39,9 @@ export default function ContactPage() {
         setSubmitStatus('success');
         setFormData({
           name: '',
-          company: '',
           email: '',
           phone: '',
           service: '',
-          budget: '',
           message: '',
           consent: false
         });
@@ -104,23 +100,6 @@ export default function ContactPage() {
                 </div>
                 
                 <div>
-                  <label htmlFor="company" className="block text-sm font-medium text-slate-700 mb-2">
-                    Компания
-                  </label>
-                  <input
-                    type="text"
-                    id="company"
-                    name="company"
-                    value={formData.company}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-paleTeal focus:border-transparent"
-                    placeholder="ООО «Компания»"
-                  />
-                </div>
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2">
-                <div>
                   <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
                     Email *
                   </label>
@@ -135,7 +114,9 @@ export default function ContactPage() {
                     placeholder="ivan@example.ru"
                   />
                 </div>
-                
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium text-slate-700 mb-2">
                     Телефон *
@@ -151,9 +132,7 @@ export default function ContactPage() {
                     placeholder="+7 (999) 123-45-67"
                   />
                 </div>
-              </div>
-
-              <div className="grid gap-4 md:grid-cols-2">
+                
                 <div>
                   <label htmlFor="service" className="block text-sm font-medium text-slate-700 mb-2">
                     Услуга *
@@ -172,27 +151,6 @@ export default function ContactPage() {
                     <option value="ppc">Контекстная реклама</option>
                     <option value="automation">Автоматизация</option>
                     <option value="other">Другое</option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label htmlFor="budget" className="block text-sm font-medium text-slate-700 mb-2">
-                    Бюджет *
-                  </label>
-                  <select
-                    id="budget"
-                    name="budget"
-                    required
-                    value={formData.budget}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl border border-slate-300 focus:ring-2 focus:ring-paleTeal focus:border-transparent"
-                  >
-                    <option value="">Выберите диапазон бюджета</option>
-                    <option value="<30k">До 30 000 ₽</option>
-                    <option value="30k-150k">30 000 – 150 000 ₽</option>
-                    <option value="150k-500k">150 000 – 500 000 ₽</option>
-                    <option value=">500k">Более 500 000 ₽</option>
-                    <option value="not-sure">Не определился</option>
                   </select>
                 </div>
               </div>

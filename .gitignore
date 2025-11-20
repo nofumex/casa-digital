@@ -1,39 +1,77 @@
 # dependencies
-/node_modules
+node_modules/
 /.pnp
 .pnp.js
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
 # testing
 /coverage
+*.log
 
 # next.js
 /.next/
 /out/
+.next/
+out/
 
 # production
 /build
+dist/
 
 # misc
 .DS_Store
 *.pem
+*.tsbuildinfo
+*.swp
+*.swo
+*~
 
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
 
 # local env files
 .env*.local
 .env.local
 .env
+.env.development.local
+.env.test.local
+.env.production.local
 
 # vercel
+.vercel/
 .vercel
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
-# cursor
-.cursor
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.cursor/
+.cursorrules
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary files
+*.tmp
+*.temp
+pm2_*.log
+*.log
+
+# Build artifacts
+*.tsbuildinfo
+build/
+dist/
 

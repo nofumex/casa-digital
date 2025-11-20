@@ -7,8 +7,6 @@ type ContactBody = {
   phone: string;
   message: string;
   service?: string;
-  budget?: string;
-  company?: string;
   website?: string;
   consent?: boolean;
   utm_source?: string;
@@ -58,8 +56,6 @@ export async function POST(req: Request) {
       `• Email: ${email}`,
       `• Телефон: ${phone}`,
       body.service ? `• Услуга: ${body.service}` : undefined,
-      body.budget ? `• Бюджет: ${body.budget}` : undefined,
-      body.company ? `• Компания: ${body.company}` : undefined,
       body.website ? `• Сайт: ${body.website}` : undefined,
       `\n💬 Сообщение:`,
       message,
