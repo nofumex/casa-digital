@@ -11,10 +11,11 @@ export async function POST(req: NextRequest) {
   try {
     const cases = await req.json();
     
-    // Проверяем, можем ли мы писать в файловую систему (работает только локально)
-    const isLocal = process.env.NODE_ENV === "development" || !process.env.VERCEL;
+    // Проверяем, можем ли мы писать в файловую систему
+    // На VPS это всегда работает, на Vercel - нет
+    const isVercel = !!process.env.VERCEL;
     
-    if (!isLocal) {
+    if (isVercel) {
       return NextResponse.json(
         {
           ok: false,
@@ -31,7 +32,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Локальная разработка - сохраняем файл
+    // Сохраняем файл (работает на VPS и локально)
     const filePath = join(process.cwd(), "public", "cms", "cases.json");
     const dataToSave = { cases: Array.isArray(cases) ? cases : [] };
     
