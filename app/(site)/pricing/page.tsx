@@ -8,18 +8,19 @@ export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 import Link from 'next/link';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 
 async function getPricingData() {
   try {
-    // Используем абсолютный URL для продакшена, относительный для разработки
-    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || (typeof window !== 'undefined' ? window.location.origin : '');
-    const url = baseUrl ? `${baseUrl}/cms/pricing.json` : '/cms/pricing.json';
-    const res = await fetch(url, { 
-      cache: 'no-store',
-      next: { revalidate: 0 }
-    });
-    return res.ok ? await res.json() : { packages: [], addons: [] };
-  } catch { return { packages: [], addons: [] }; }
+    // Читаем файл напрямую с диска для гарантированно свежих данных
+    const filePath = join(process.cwd(), 'public', 'cms', 'pricing.json');
+    const fileContents = readFileSync(filePath, 'utf-8');
+    return JSON.parse(fileContents);
+  } catch (error) {
+    console.error('Error reading pricing.json:', error);
+    return { packages: [], addons: [] };
+  }
 }
 
 const defaultPackages = [
