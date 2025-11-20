@@ -3,11 +3,21 @@ export const metadata = {
   description: 'Выберите подходящий пакет услуг или запросите индивидуальный расчет. Веб-разработка, SMM, реклама и автоматизация с четкими сроками и объемом работ.'
 };
 
+// Принудительно делаем страницу динамической, чтобы данные всегда обновлялись
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import Link from 'next/link';
 
 async function getPricingData() {
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL || ''}/cms/pricing.json`, { cache: 'no-store' });
+    // Используем абсолютный URL для продакшена, относительный для разработки
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || (typeof window !== 'undefined' ? window.location.origin : '');
+    const url = baseUrl ? `${baseUrl}/cms/pricing.json` : '/cms/pricing.json';
+    const res = await fetch(url, { 
+      cache: 'no-store',
+      next: { revalidate: 0 }
+    });
     return res.ok ? await res.json() : { packages: [], addons: [] };
   } catch { return { packages: [], addons: [] }; }
 }
