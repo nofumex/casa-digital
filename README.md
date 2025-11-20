@@ -1,31 +1,141 @@
-# Casa Digital (Next.js 14)
+# Casa Digital
 
-Stack: Next.js 14 (App Router), TypeScript, Tailwind CSS, Framer Motion.
+Современный веб-сайт для digital-агентства, построенный на Next.js 14 с TypeScript.
 
-Getting started
-- npm run dev
+## 🚀 Быстрый старт
 
-Environment (.env)
-- SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS, MAIL_TO
-- TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID
+### Установка зависимостей
 
-Scripts
-- dev: next dev
-- build: next build
-- start: next start
-- test: vitest run
+```bash
+npm install
+```
 
-Notes
-- API routes: /api/lead, /api/contact, /api/subscribe
-- Sitemap: /api/sitemap, Robots: /robots.txt
-- PWA: public/manifest.json
+### Запуск в режиме разработки
 
+```bash
+npm run dev
+```
 
+Откройте [http://localhost:3000](http://localhost:3000) в браузере.
 
+### Сборка для продакшена
 
+```bash
+npm run build
+npm start
+```
 
+## 📦 Установка на VPS
 
+### 1. Клонирование репозитория
 
+```bash
+git clone https://github.com/nofumex/casa-digital.git
+cd casa-digital
+```
 
+### 2. Установка зависимостей
 
+```bash
+npm install
+```
 
+### 3. Настройка переменных окружения
+
+Создайте файл `.env.local`:
+
+```env
+TELEGRAM_BOT_TOKEN=your_bot_token_here
+TELEGRAM_ADMIN_ID=your_chat_id_here
+ADMIN_PASSWORD=your_secure_password
+NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+```
+
+### 4. Сборка проекта
+
+```bash
+npm run build
+```
+
+### 5. Запуск с PM2 (рекомендуется)
+
+```bash
+npm install -g pm2
+pm2 start npm --name "casa-digital" -- start
+pm2 save
+pm2 startup
+```
+
+### 6. Настройка Nginx (опционально)
+
+Пример конфигурации для Nginx:
+
+```nginx
+server {
+    listen 80;
+    server_name yourdomain.com;
+
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+    }
+}
+```
+
+## 🛠 Технологии
+
+- **Next.js 14** - React фреймворк
+- **TypeScript** - Типизация
+- **Tailwind CSS** - Стилизация
+- **Framer Motion** - Анимации
+- **React Hook Form** - Управление формами
+
+## 📁 Структура проекта
+
+```
+├── app/                    # Next.js App Router
+│   ├── (site)/            # Публичные страницы
+│   ├── admin/             # Админ-панель
+│   └── api/                # API routes
+├── components/             # React компоненты
+├── public/                 # Статические файлы
+│   └── cms/               # JSON контент
+├── lib/                    # Утилиты
+└── styles/                # Глобальные стили
+```
+
+## 🔐 Админ-панель
+
+Доступ: `/admin`
+
+Пароль по умолчанию: `admin123` (измените в `app/admin/page.tsx`)
+
+## 📝 Обновление контента
+
+### Через админ-панель (локально)
+
+1. Запустите проект локально: `npm run dev`
+2. Откройте `/admin`
+3. Внесите изменения и сохраните
+
+### Через GitHub (продакшен)
+
+1. Отредактируйте файлы в `/public/cms/`
+2. Сделайте commit и push
+3. На VPS: `git pull && npm run build && pm2 restart casa-digital`
+
+## 🌐 Деплой на Vercel
+
+Проект готов для деплоя на Vercel:
+
+1. Подключите репозиторий к Vercel
+2. Добавьте переменные окружения в настройках
+3. Деплой произойдет автоматически
+
+## 📄 Лицензия
+
+MIT
