@@ -8,16 +8,17 @@ app/api/admin/update-pricing/route.ts
 app/api/admin/update-home/route.ts
 app/api/admin/update-about/route.ts
 app/api/admin/update-blog/route.ts
-app/api/admin/update-cases/route.ts
+app/api/admin/update-cases/route.ts (обновлен: добавлена нормализация данных галереи)
 app/api/admin/update-contacts/route.ts
 app/api/admin/update-faq/route.ts
 app/api/admin/update-policies/route.ts
 app/api/admin/update-services/route.ts
 ```
 
-### 2. Страница Pricing (для отображения актуальных данных):
+### 2. Страницы с динамическим чтением данных:
 ```
 app/(site)/pricing/page.tsx
+app/(site)/portfolio/[slug]/page.tsx (обновлен: динамическое чтение и нормализация галереи)
 ```
 
 ### 3. Опционально (не критично, но полезно):
@@ -82,7 +83,9 @@ chown -R node:node public/cms/
 1. Откройте админ-панель: `https://casadigital.ru/admin`
 2. Попробуйте сохранить изменения в Pricing
 3. Проверьте, что на странице `/pricing` отображаются новые данные
-4. Проверьте логи приложения: `pm2 logs casa-digital`
+4. Попробуйте сохранить изменения в Портфолио (кейсы)
+5. Проверьте, что на странице конкретного кейса (например, `/portfolio/master-ryadom`) отображаются изображения из галереи
+6. Проверьте логи приложения: `pm2 logs casa-digital`
 
 ## Если что-то не работает:
 

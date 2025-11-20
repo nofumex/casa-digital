@@ -32,9 +32,56 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Normalize and clean gallery data
+    const normalizeCases = (casesArray: any[]): any[] => {
+      return casesArray.map((caseItem: any) => {
+        if (!caseItem.gallery || !Array.isArray(caseItem.gallery)) {
+          return caseItem;
+        }
+        
+        // Clean gallery: ensure each item is { url: string, description?: string }
+        const cleanedGallery = caseItem.gallery.map((item: any) => {
+          // If it's a string, convert to object
+          if (typeof item === 'string') {
+            return { url: item, description: '' };
+          }
+          
+          // If it's an object, ensure it has the correct structure
+          if (item && typeof item === 'object') {
+            // If it has numeric keys (corrupted), ignore them and use url if present
+            const numericKeys = Object.keys(item).filter(k => /^\d+$/.test(k));
+            if (numericKeys.length > 0) {
+              // Corrupted object - only keep url and description if they exist
+              return {
+                url: item.url || '',
+                description: item.description || ''
+              };
+            }
+            
+            // Normal object - ensure url exists
+            if (item.url) {
+              return {
+                url: item.url,
+                description: item.description || ''
+              };
+            }
+          }
+          
+          return null;
+        }).filter((item: any) => item && item.url); // Remove null/empty items
+        
+        return {
+          ...caseItem,
+          gallery: cleanedGallery
+        };
+      });
+    };
+
     // Сохраняем файл (работает на VPS и локально)
     const filePath = join(process.cwd(), "public", "cms", "cases.json");
-    const dataToSave = { cases: Array.isArray(cases) ? cases : [] };
+    const casesArray = Array.isArray(cases) ? cases : [];
+    const normalizedCases = normalizeCases(casesArray);
+    const dataToSave = { cases: normalizedCases };
     
     writeFileSync(filePath, JSON.stringify(dataToSave, null, 2), "utf-8");
     
